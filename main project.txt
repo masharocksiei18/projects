@@ -1,0 +1,209 @@
+# This is introduction to the entire project that why it is coded , how it is coded and some information about modules used in this project.
+
+print("                     ~INTRODUCTION~                          ")
+print("This project contains : \n 1. Objectives \n 2. Modules \n 3. Limitations")
+ob=int(input("To view its objectives , please enter 1 : "))
+print("There are several objectives of this phonebook : \n (i) Phonebook contains records sequentially. \n (ii) Search operation can be done in this program ,Easy to search a record using Id.")
+print(" (iii) Address can also be added in the phonebook. \n (iv)We can change the subscriber's ID,name Address and Phone number  \n (v) Records are in a spreadsheet i.e Excel sheet." )
+print(" (vi) We can include and exclude a subscriber from this phonebook.")
+print("\n \n")
+
+md=int(input("To view the modules used , please enter 2 : "))
+print("Python contains many modules , which are too useful.")
+print("Here we used modules : Random module & csv module.")
+print("Random module is used because ; \n 1. It provides many functions like randint(),random(),choice()...etc. \n 2. All functions in this , returns random values.  \n 3. Flexible to use.")
+print("csv module is used because ; \n 1. It has many functions like reader(),writer(),join(),next()...etc. \n 2. It imports data onto a spreadsheet or database. \n 3. It is easy to edit.")
+print("\n \n")
+
+lm=int(input("To view its limitations , please enter 3 : "))
+print("!!! Nothing is PERFECT in this World. !!!")
+print("Some limitations of this project are ; ")
+print("1. Records are presentable in tabular form only not in another format.")
+print("2. Python is case sensitive.")
+print("3. Python is not the fastest language & not easily convertible.")
+print("\n \n")
+
+print("                     .......~THANK YOU~ ......                   ")
+
+
+def add_subs():
+    import csv
+    f=open("phonebook.csv","a+",)
+    rf=csv.writer(f)
+        
+    n=int(input("How many subscribers you want to add? "))
+    for i in range(n):
+            import random
+            if i==0:
+                print("for adding first subcriber,fill the following details:")
+            elif i==1:
+                print("for adding second subcriber,fill the following details:")
+            elif i==2:
+                print("for adding third subcriber,fill the following details:")
+            else:
+                print("for adding",i+1,"th subcriber,fill the following details:")
+            firstname=input("Enter first name of subscriber: ")
+            lastname=input("Enter last name of the subscriber:")
+            print("ADDRESS:")
+            hno=input("house no:")
+            lty=input("locality:")
+            cty=input("city:")
+            cntry=input("country:")
+            num=input("Enter number:")
+            subid=random.randint(1000,10000)
+            rf.writerow([subid,firstname+' '+lastname,hno+","+lty+","+cty+","+cntry,num])
+            print("following record added successfully:")
+            print([subid,firstname+' '+lastname,hno+","+lty+","+cty+","+cntry,num])
+            print('\n')
+    p_dict()
+            
+
+            
+def change():
+    import csv
+    f=open("phonebook.csv",'r')
+    ch1=int(input("To update in phonebook \nfor name, Enter 1,\nfor address Enter 2,\nfor mobile no Enter 3:"))
+    g=csv.reader(f)
+    x=[]
+    if ch1==1:
+        subid=input('Enter subid:')
+        for l in g:
+            try:
+                if subid==l[0]:
+                    sname=input("Enter Subscriber's name")
+                    l[1]=str(sname)
+                    x.append(l)
+                    print("Data Changed:\n",l)
+    
+                elif len(l)!=0:
+                    if  subid==l[0]:
+                        break
+                    x.append(l)
+               
+            except:
+                pass
+    elif ch1==2:
+        subid=input('Enter subid')
+        for i in g:
+            try:
+                if subid==i[0]:
+                    a=input('Enter house no:')
+                    b=input('Enter locality:')
+                    c=input('Enter city:')
+                    d=input('Enter country:')
+                    add=a+' , '+b+' , '+c+' , '+d
+                    i[2]=add
+                    x.append(i)
+                    print("Data Changed:\n",i)
+                elif len(i)!=0:
+                    if subid==i[0]:
+                        break
+                    x.append(i)
+                
+            except:
+                pass
+    elif ch1==3:
+        subid=input('Enter subid')
+        for a in g:
+            try:
+                if subid==a[0]:
+                    mob=int(input('Enter mobile no:'))
+                    a[3]=mob
+                    x.append(a)
+                    print("Data Changed:\n",a)
+                elif len(a)!=0:
+                    if subid==a[0]:
+                        break
+                    x.append(a)
+                
+                    
+            except:
+                pass
+    else:
+        print("Invalid input")
+    
+    f1=open('phonebook.csv','w')
+    c=csv.writer(f1)
+    c.writerows(x)
+    
+    print("Data modified successfully!!")
+   
+    f1.close()
+    f.close()
+    p_dict()
+    
+
+def exclude():
+    import csv
+    lines = list()
+
+    sub_id= input("Please enter a subscriber id to be deleted.")
+
+    with open('phonebook.csv', 'r') as readFile:
+            reader = csv.reader(readFile)
+            for row in reader:
+                lines.append(row)
+                for field in row:
+                    if field == sub_id:
+                        lines.remove(row)
+
+    with open('phonebook.csv', 'w') as writeFile:
+            writer = csv.writer(writeFile)
+            writer.writerows(lines)
+    print("\nsuccesfully deleted\n")
+    p_dict()
+
+            
+def p_dict():
+    def update():
+        print("\n\nfollowing changes you can do in the records of phonebook:\n 1. Add a new subscriber \n 2.Change in any record\n 3.Exclude a subscriber from phonebook")
+        ch=int(input("Enter your choice (1/2/3): "))
+
+        if ch==1:
+            add_subs()
+        
+            
+        elif ch==2:
+            change()
+
+        elif ch==3:
+            exclude()
+        p_dict()
+            
+        
+
+    
+    def search():
+        import csv
+        f=open("phonebook.csv","r")
+        rf=csv.reader(f)
+        name_=input("Enter subscriber's name for searching:")
+        n=0
+        for line in rf:
+            if name_ in line:
+                print("Record Found\nsubscriber's Id:",line[0],"\nsubscriber's name:",line[1],"\nAddress:",line[2],"\nPhone Number:",line[3])
+                n=1
+        if n==0:
+            print("RECORD NOT FOUND!")
+            
+        
+    
+        f.close()
+        print()
+        p_dict()
+
+    
+    p=int(input("Following functions can be performed\n1.To update the record:\n2.Search of a record:\n3.To exit\nEnter your choice(1/2/3):"))
+    if p==1:
+        update()
+    elif p==2:
+        search()
+    elif p==3:
+        print("...........THANKS FOR VISITING..........")
+     
+    
+p_dict()    
+        
+     
+        
+        
